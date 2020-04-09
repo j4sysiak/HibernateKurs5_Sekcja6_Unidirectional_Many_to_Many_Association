@@ -3,7 +3,9 @@ package pl.jaceksysiak.demo.entity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -23,9 +28,11 @@ public class Account {
 	@Column(name = "ACCOUNT_ID")
 	private Long accountId;
 
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="account")
-	List<Transaction> transactions = new ArrayList<Transaction>();
-	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name="USER_ACCOUNT", joinColumns=@JoinColumn(name="ACCOUNT_ID"), 
+		inverseJoinColumns=@JoinColumn(name="USER_ID"))
+	private Set<User> users = new HashSet<User>();
+
 	@Column(name = "NAME")
 	private String name;
 
@@ -133,12 +140,12 @@ public class Account {
 		this.createdBy = createdBy;
 	}
 
-	public List<Transaction> getTransactions() {
-		return transactions;
+	public Set<User> getUsers() {
+		return users;
 	}
 
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 
 	
